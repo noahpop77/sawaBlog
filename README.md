@@ -66,6 +66,56 @@ The build output goes to `dist/`.
 
 The footer contains GitHub, LinkedIn, YouTube, and Back to top.
 
+## Publishing locally
+
+There are two ways to edit locally, depending on your browser.
+
+### Firefox-based browsers (Firefox, Zen, LibreWolf)
+
+Firefox does not implement the File System Access API, so Sveltia's **Work with
+Local Repository** mode cannot run there. Use the GitHub backend instead:
+
+1. Start the dev server with `npm run dev` and open <http://localhost:4321/admin>.
+2. Choose **Sign In Using Access Token** and paste a token with **Contents:
+   Read and write** access to this repository (see [Signing in](#signing-in)).
+3. Create or edit a post and click **Publish**.
+
+Publishing commits to GitHub, where your host rebuilds the site. To see the new
+files in your local checkout, run `git pull` and Astro will pick them up
+immediately. Pasting images into the editor works in Firefox; uploading more than
+one image in a single paste does not.
+
+Sveltia's local-repository mode is Chromium-only, so the CMS hides that option in
+Firefox rather than showing a button that cannot work.
+
+### Chromium-based browsers (Chrome, Edge, Brave, Arc)
+
+Use the local workflow to edit files without committing anything:
+
+1. Start the dev server with `npm run dev` and open <http://localhost:4321/admin>.
+2. Choose **Work with Local Repository**.
+3. When the browser asks for a folder, select the root of this project (the
+   folder containing `package.json`).
+4. Allow read and write access when prompted.
+
+From there, creating a post or pasting an image writes files directly into
+`src/content/blog/`, `src/content/moments/`, and `public/uploads/`. Astro picks
+up the change immediately, so you can preview the result at
+<http://localhost:4321> without publishing.
+
+Notes:
+
+- This workflow needs a Chromium-based browser and a Git repository, both
+  already true for this project.
+- The browser remembers the folder permission per origin, so you may not need to
+  select it again on the next visit.
+- If `npm run dev` reports a different port (for example `4322` because `4321`
+  is busy), update `site_url` and `display_url` in `public/admin/config.yml` to
+  match, then restart the dev server.
+- Use **Publish** in the CMS to commit and push through GitHub. If you only want
+  local files, use **Save** instead; nothing is committed until you run Git
+  yourself.
+
 ## Publishing from the browser
 
 The CMS is at `/admin`. It is not linked from the public site.
@@ -80,16 +130,18 @@ The CMS is at `/admin`. It is not linked from the public site.
    ```
 
    with your actual repository, for example `yourname/personal-site`. Also set
-   `site_url` and `display_url` to your real domain.
+   `site_url` and `display_url` to your real domain, including the protocol
+   (`https://your-domain.com`); Sveltia rejects bare hostnames.
 3. Commit and push. Wait for your host to deploy.
 4. Open `https://your-domain/admin`.
 
 ### Signing in
 
 The CMS uses the GitHub backend. The simplest way to sign in is a **personal
-access token**:
+access token**, which works in Firefox-based browsers such as Zen as well as in
+Chromium-based browsers:
 
-1. On the CMS login screen, choose **Sign In with Token**.
+1. On the CMS login screen, choose **Sign In Using Access Token**.
 2. The dialog links to GitHub's token page with the right permissions
    pre-selected. If you create one manually, a fine-grained token needs
    **Contents: Read and write** access to this repository. A classic token needs
@@ -194,5 +246,37 @@ Any static host works. Once you connect this repository:
 - **Install command:** `npm install`
 - Deploys should run on every push to the branch configured in
   `public/admin/config.yml` (`main` by default).
+
+### GitHub Pages
+
+This repository includes `.github/workflows/deploy.yml`, which builds the site
+and publishes `dist` on every push to `main`.
+
+1. In the repository, open **Settings → Pages** and set **Source** to
+   **GitHub Actions**.
+2. Set the custom domain to `bsawa.com`.
+3. At your DNS provider (Cloudflare, in this case), remove any existing `A` or
+   `CNAME` record on the apex domain, then add:
+   - `A` records for `@`:
+     `185.199.108.153`, `185.199.109.153`, `185.199.110.153`,
+     `185.199.111.153`
+   - `AAAA` records for `@`:
+     `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`,
+     `2606:50c0:8003::153`
+   - a `CNAME` record for `www` pointing to `noahpop77.github.io`
+4. Leave all of these records **DNS only** (grey cloud). GitHub has to see the
+   hostnames directly to issue its HTTPS certificate; the orange proxy can be
+   enabled later if you want Cloudflare in front.
+5. Wait for the DNS check, then enable **Enforce HTTPS**. Certificate issuance
+   is usually quick but can take up to 24 hours.
+6. Update `site` in `astro.config.mjs` and `site_url` / `display_url` in
+   `public/admin/config.yml` to `https://bsawa.com`, commit, and push.
+
+GitHub Pages automatically redirects `www.bsawa.com` to `bsawa.com` once both
+sets of records exist.
+
+With GitHub Actions publishing, the custom domain is stored in the repository
+settings. A `CNAME` file is only used when publishing from a branch, so none is
+needed here.
 
 No RSS feeds, analytics, email links, Mastodon, or webmentions are included.

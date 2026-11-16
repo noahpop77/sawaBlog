@@ -4,7 +4,7 @@ export const site = {
   title: "Brian Sawa — Personal site",
   description:
     "A personal site for writing about and documenting my technical work and small moments in between.",
-  url: "https://example.com",
+  url: "https://bsawa.com",
   social: {
     github: "https://github.com/noahpop77",
     linkedin: "https://www.linkedin.com/in/brian-sawa/",

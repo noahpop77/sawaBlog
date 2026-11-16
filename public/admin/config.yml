@@ -11,9 +11,11 @@ backend:
   repo: noahpop77/sawaBlog
   branch: main
 
-# Used for preview links. Change this to your real domain once you have one.
-site_url: https://example.com
-display_url: https://example.com
+# Used for preview links. Must be an absolute URL including the protocol.
+# For local development you can temporarily change these to
+# http://localhost:4321 so preview links point at the dev server.
+site_url: https://bsawa.com
+display_url: https://bsawa.com
 
 # Images pasted into the editor are committed here and served from /uploads.
 media_folder: public/uploads

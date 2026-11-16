@@ -5,11 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Content Manager</title>
+    <style>
+      /*
+       * Sveltia's "Work with Local Repository" mode uses the File System Access
+       * API, which Firefox-based browsers (including Zen) do not implement.
+       * Hide the broken option there so only the GitHub sign-in methods remain.
+       */
+      html.no-file-system-access
+        button[data-label="Work with Local Repository"] {
+        display: none !important;
+      }
+    </style>
+    <script>
+      if (!("showDirectoryPicker" in window)) {
+        document.documentElement.classList.add("no-file-system-access");
+      }
+    </script>
   </head>
   <body>
     <!--
       Sveltia CMS. The admin UI is only reachable at /admin, and publishing
       requires a GitHub token with write access to this repository.
+
+      Firefox-based browsers can publish with an access token. To edit files in
+      the local repository without committing, use a Chromium-based browser.
     -->
     <script src="https://unpkg.com/@sveltia/cms@0.267.1/dist/sveltia-cms.js"></script>
   </body>
