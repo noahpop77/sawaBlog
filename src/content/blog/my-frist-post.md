@@ -1,13 +1,15 @@
 ---
 title: My Frist Post
-description: Here we go
+description: My Arch desktop wallpaper
 date: 2026-11-16
 tags:
-  - Programming
-  - Poggers
+  - Linux
+  - Wallpapers
 cover: /uploads/rukia-kuchiki-4000x2250-10498.png
 featured: false
 draft: false
 ---
 
-Wow this is sick.
+I figured this would be a good place to start with regards to posting things on the blog. 
+
+A simple way of testing if image functionality works is by using one in the post so, The cover image of this blog post is my current Arch desktop background. I love the anime Bleach for many reasons but in large part is it's character design. This leads to drop dead amazing art.
