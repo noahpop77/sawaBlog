@@ -1,0 +1,159 @@
+---
+import LogoMark from "./LogoMark.astro";
+import { nav, site } from "../data/site";
+
+const path = Astro.url.pathname;
+const nameParts = site.name.split(/\s+/).filter(Boolean);
+
+function isActive(href: string): boolean {
+  return href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+}
+---
+
+<header class="site-header">
+  <div class="shell">
+    <nav class="site-nav" aria-label="Main">
+      <a class="brand" href="/" aria-label={`${site.name} home`}>
+        <span class="brand-avatar">
+          <LogoMark class="brand-mark" />
+        </span>
+        <span class="brand-name">
+          {
+            nameParts.map((part, index) => (
+              <>
+                {part}
+                {index < nameParts.length - 1 && <br />}
+              </>
+            ))
+          }
+        </span>
+      </a>
+
+      <ul class="nav-links" id="site-nav">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <div class="theme-actions">
+            <button
+              class="icon-button"
+              type="button"
+              data-theme-toggle
+              aria-label="Switch theme"
+              title="Switch theme"
+            >
+              <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path
+                  d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+                ></path>
+              </svg>
+              <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.9 13.1a9 9 0 1 1-10-10 7 7 0 0 0 10 10Z"></path>
+              </svg>
+            </button>
+
+            <button
+              class="icon-button"
+              type="button"
+              data-flashlight-toggle
+              aria-label="Turn flashlight off"
+              title="Turn flashlight off"
+            >
+              <svg class="icon-flashlight-on" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 6c0 2-2 2-2 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10c0-2-2-2-2-4V2h12z"></path>
+                <path d="M6 6h12M12 12v4"></path>
+              </svg>
+              <svg class="icon-flashlight-off" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 6c0 2-2 2-2 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10c0-2-2-2-2-4V2h12z"></path>
+                <path d="M6 6h12M2 2l20 20"></path>
+              </svg>
+            </button>
+          </div>
+        </li>
+      </ul>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-controls="site-nav"
+        aria-expanded="false"
+        aria-label="Open menu"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const themeToggle = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+  const flashlightToggle = document.querySelector<HTMLButtonElement>("[data-flashlight-toggle]");
+  const menuToggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const navLinks = document.getElementById("site-nav");
+
+  function updateThemeLabel() {
+    if (!themeToggle) return;
+    const dark = root.dataset.theme === "dark";
+    themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    themeToggle.setAttribute("title", dark ? "Switch to light theme" : "Switch to dark theme");
+  }
+
+  themeToggle?.addEventListener("click", () => {
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    localStorage.setItem("theme", next);
+    updateThemeLabel();
+  });
+
+  updateThemeLabel();
+
+  function updateFlashlightLabel() {
+    if (!flashlightToggle) return;
+    const on = !root.classList.contains("no-flashlight");
+    flashlightToggle.setAttribute("aria-label", on ? "Turn flashlight off" : "Turn flashlight on");
+    flashlightToggle.setAttribute("title", on ? "Turn flashlight off" : "Turn flashlight on");
+  }
+
+  flashlightToggle?.addEventListener("click", () => {
+    const enable = root.classList.contains("no-flashlight");
+    root.classList.toggle("flashlight", enable);
+    root.classList.toggle("no-flashlight", !enable);
+    localStorage.setItem("flashlight", enable ? "on" : "off");
+    updateFlashlightLabel();
+  });
+
+  updateFlashlightLabel();
+
+  function setMenu(open: boolean) {
+    if (!navLinks || !menuToggle) return;
+    navLinks.classList.toggle("is-open", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  }
+
+  menuToggle?.addEventListener("click", () => {
+    setMenu(!navLinks?.classList.contains("is-open"));
+  });
+
+  navLinks?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setMenu(false));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!navLinks?.classList.contains("is-open")) return;
+    const target = event.target as Node;
+    if (navLinks.contains(target) || menuToggle?.contains(target)) return;
+    setMenu(false);
+  });
+</script>

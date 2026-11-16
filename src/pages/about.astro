@@ -1,0 +1,67 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+---
+
+<BaseLayout title={`About — ${site.name}`} description={`About ${site.name}.`}>
+  <header class="shell page-head">
+    <h1>About me</h1>
+    <p>Talking about himself again...
+    <br>
+    How self absorbed is this guy...
+    </p>
+  </header>
+
+  <div class="shell about-content">
+    <section class="panel">
+      <header class="panel-header">
+        <h2>Hello</h2>
+      </header>
+      <div class="panel-body">
+        <p>
+        I'm {site.name}. I have worked in software engineering and security
+        for a minute now. This site is gonna be a place for me to document
+        some of my incoherent rambling about technology, programming, art,  
+        and my random interests, but mostly about technology.
+        </p>
+        <p>
+          To stay sane I also enjoy things like - books, music, cooking, 
+          and games when the work laptop is closed.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header class="panel-header">
+        <h2>Work</h2>
+      </header>
+      <div class="panel-body">
+        <p>
+        I have worked as a Security Solutions Architect for 5 years now. I enjoy
+        developing creative solutions to wild infrastructure problems. Worst I have
+        had to solve involved building a synchronization automation connecting
+        data pipelines from 10+ teams 0_0.
+        <br>
+        <br>
+        I am currently in the process of studying embedded engineering to further
+        my goals of becoming a mad scientist.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <header class="panel-header">
+        <h2>Elsewhere</h2>
+      </header>
+      <div class="panel-body">
+          <p>
+          You can find me at my socials in the footer.
+          <br>
+          <br>
+          I also make pretty kick ass videos if I do say so myself on my youtube
+          channel @BernaBuilds.
+        </p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import MomentCard from "../../components/MomentCard.astro";
+import { getCollection } from "astro:content";
+import { byNewest } from "../../lib/format";
+
+const moments = (await getCollection("moments")).sort(byNewest);
+---
+
+<BaseLayout title="Moments" description="Short moments and snapshots.">
+  <header class="shell page-head">
+    <h1>Moments</h1>
+    <p>
+      Random glimpses into my day-to-day life. Like social media without the
+      social stuff.
+    </p>
+  </header>
+
+  <div class="shell archive">
+    {
+      moments.length > 0 ? (
+        <ul class="moment-list">
+          {moments.map((entry) => (
+            <li>
+              <MomentCard entry={entry} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty-state">No moments yet.</p>
+      )
+    }
+  </div>
+</BaseLayout>

@@ -1,0 +1,72 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import MomentCard from "../components/MomentCard.astro";
+import { getCollection } from "astro:content";
+import { byNewest, formatDate } from "../lib/format";
+import { site } from "../data/site";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(byNewest);
+const recentPosts = posts.slice(0, 5);
+
+const moments = (await getCollection("moments")).sort(byNewest);
+const recentMoments = moments.slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="shell hero">
+    <h1>Hi, I'm {site.name}.</h1>
+    <p>
+      I build software for a living, and I write about it here. I also keep a
+      running log of small, everyday moments - the kind of things that would 
+      otherwise disappear into a group chat or keep me up at night.
+    </p>
+    <p>
+      This place is my home on the web. Whenever I feel like it, I jot down some
+      thoughts - mostly on software, side projects, and whatever else is my current
+      hyperfixation 0_0
+    </p>
+    <p>
+      You can browse <a href="/blog">the stuff I've written</a>, take a
+      peek at <a href="/moments">personal moments</a>, or figure out what
+      <a href="/now">keeps me busy at the moment</a>.
+    </p>
+  </section>
+
+  {
+    recentPosts.length > 0 && (
+      <section class="shell section">
+        <h2>Most recent</h2>
+        <ul class="post-list">
+          {recentPosts.map((post) => (
+            <li>
+              <a class="post-row" href={`/blog/${post.id}`}>
+                <span class="title">
+                  {post.data.title}
+                  <span class="leader" aria-hidden="true"></span>
+                </span>
+                <time class="date" datetime={post.data.date.toISOString()}>
+                  {formatDate(post.data.date)}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    recentMoments.length > 0 && (
+      <section class="shell section">
+        <h2>Recent moments</h2>
+        <ul class="moment-list">
+          {recentMoments.map((entry) => (
+            <li>
+              <MomentCard entry={entry} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>

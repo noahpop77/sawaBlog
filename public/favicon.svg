@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Site logo">
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    .background {
+      fill: #fff2ee;
+    }
+
+    .line {
+      fill: none;
+      stroke: #6d28d9;
+      stroke-linejoin: round;
+    }
+
+    .dot {
+      fill: #6d28d9;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .background {
+        fill: #070000;
+      }
+
+      .line {
+        stroke: #b794f6;
+      }
+
+      .dot {
+        fill: #b794f6;
+      }
+    }
+  </style>
+  <rect class="background" width="64" height="64" rx="14" />
+  <circle class="line" cx="32" cy="32" r="22" stroke-width="2.5" />
+  <path class="line" d="M32 15 49 32 32 49 15 32Z" stroke-width="3" />
+  <circle class="dot" cx="32" cy="32" r="3" />
+</svg>

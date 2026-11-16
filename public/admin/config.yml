@@ -1,0 +1,99 @@
+# Sveltia CMS configuration.
+#
+# Replace the repo below with your own GitHub repository, for example:
+#   repo: yourname/personal-site
+#
+# Sign in at /admin with a GitHub personal access token that has
+# "Contents: Read and write" permission for this repository.
+
+backend:
+  name: github
+  repo: noahpop77/sawaBlog
+  branch: main
+
+# Used for preview links. Change this to your real domain once you have one.
+site_url: https://example.com
+display_url: https://example.com
+
+# Images pasted into the editor are committed here and served from /uploads.
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: blog
+    label: Blog posts
+    label_singular: Blog post
+    folder: src/content/blog
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - {
+          name: description,
+          label: Description,
+          widget: text,
+          hint: "One or two sentences shown in the archive and link previews.",
+        }
+      - { name: date, label: Date, widget: datetime, type: date }
+      - {
+          name: tags,
+          label: Tags,
+          widget: list,
+          required: false,
+          default: [],
+          hint: "Press Enter after each tag.",
+        }
+      - { name: cover, label: Cover image, widget: image, required: false }
+      - {
+          name: featured,
+          label: Featured,
+          widget: boolean,
+          required: false,
+          default: false,
+        }
+      - {
+          name: draft,
+          label: Draft,
+          widget: boolean,
+          required: false,
+          default: false,
+          hint: "Drafts are hidden from the built site.",
+        }
+      - {
+          name: body,
+          label: Body,
+          widget: markdown,
+          hint: "Paste images directly into the editor.",
+        }
+
+  - name: moments
+    label: Moments
+    label_singular: Moment
+    folder: src/content/moments
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{hour}}{{minute}}{{second}}"
+    extension: md
+    format: frontmatter
+    summary: "{{date}}"
+    sortable_fields: [date]
+    fields:
+      - { name: date, label: Date, widget: datetime }
+      - {
+          name: tags,
+          label: Tags,
+          widget: list,
+          required: false,
+          default: [],
+          hint: "Press Enter after each tag.",
+        }
+      - {
+          name: body,
+          label: Body,
+          widget: markdown,
+          hint: "Paste images directly into the editor.",
+        }

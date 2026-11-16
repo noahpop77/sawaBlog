@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# The CMS is private even though it is reachable by URL.
+Disallow: /admin

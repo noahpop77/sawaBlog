@@ -1,0 +1,74 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { formatDate, tagSlug } from "../../lib/format";
+import { site } from "../../data/site";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout
+  title={`${post.data.title} — ${site.name}`}
+  description={post.data.description}
+  image={post.data.cover}
+  article
+>
+  <article>
+    <header class="post-header">
+      <h1>{post.data.title}</h1>
+      <p class="post-intro">{post.data.description}</p>
+      <div class="post-meta">
+        <span>
+          <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+          {
+            post.data.updated && (
+              <>
+                <span aria-hidden="true"> · </span>
+                Updated <time datetime={post.data.updated.toISOString()}>
+                  {formatDate(post.data.updated)}
+                </time>
+              </>
+            )
+          }
+        </span>
+        {
+          post.data.tags.length > 0 && (
+            <ul class="tag-list">
+              {post.data.tags.map((tag) => (
+                <li>
+                  <a class="tag" href={`/tags/${tagSlug(tag)}`}>
+                    {tag}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </header>
+
+    {post.data.cover && <img class="post-cover" src={post.data.cover} alt="" />}
+
+    <div class="post-body prose">
+      <Content />
+    </div>
+
+    <div class="post-body">
+      <a class="back-link" href="/blog">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m12 19-7-7 7-7M19 12H5"></path>
+        </svg>
+        All posts
+      </a>
+    </div>
+  </article>
+</BaseLayout>

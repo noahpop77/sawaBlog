@@ -1,0 +1,51 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import LogoMark from "./LogoMark.astro";
+import { formatMomentDate, tagSlug } from "../lib/format";
+import { site } from "../data/site";
+
+interface Props {
+  entry: CollectionEntry<"moments">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const date = entry.data.date;
+---
+
+<article class="moment-card">
+  <header class="moment-header">
+    <div class="moment-author">
+      <span class="avatar">
+        <LogoMark class="avatar-mark" />
+      </span>
+      <a class="moment-name" href="/about">
+        <span>{site.name}</span>
+        <span class="handle">{site.handle}</span>
+      </a>
+    </div>
+    <a href={`/moments/${entry.id}`}>
+      <time datetime={date.toISOString()}>{formatMomentDate(date)}</time>
+    </a>
+  </header>
+
+  <div class="moment-body">
+    <Content />
+  </div>
+
+  {
+    entry.data.tags.length > 0 && (
+      <footer class="moment-footer">
+        <ul class="tag-list">
+          {entry.data.tags.map((tag) => (
+            <li>
+              <a class="tag" href={`/tags/${tagSlug(tag)}`}>
+                {tag}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </footer>
+    )
+  }
+</article>

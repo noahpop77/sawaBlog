@@ -1,0 +1,92 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import MomentCard from "../../components/MomentCard.astro";
+import { getCollection } from "astro:content";
+import { byNewest, formatShortDate, tagSlug } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const moments = await getCollection("moments");
+
+  const labels = new Map<string, string>();
+  for (const entry of [...posts, ...moments]) {
+    for (const tag of entry.data.tags) {
+      labels.set(tagSlug(tag), tag);
+    }
+  }
+
+  return [...labels.entries()].map(([slug, label]) => ({
+    params: { tag: slug },
+    props: { label },
+  }));
+}
+
+const { tag } = Astro.params;
+const { label } = Astro.props;
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .filter((post) => post.data.tags.some((item) => tagSlug(item) === tag))
+  .sort(byNewest);
+
+const moments = (await getCollection("moments"))
+  .filter((entry) => entry.data.tags.some((item) => tagSlug(item) === tag))
+  .sort(byNewest);
+
+const total = posts.length + moments.length;
+---
+
+<BaseLayout
+  title={`Tag: ${label}`}
+  description={`Posts and moments tagged with ${label}.`}
+>
+  <header class="shell page-head">
+    <h1>{label}</h1>
+    <p>{total} {total === 1 ? "entry" : "entries"} tagged with &ldquo;{label}&rdquo;.</p>
+  </header>
+
+  {
+    posts.length > 0 && (
+      <section class="shell section">
+        <h2>Blog posts</h2>
+        <ul class="post-list">
+          {posts.map((post) => (
+            <li>
+              <a class="post-row" href={`/blog/${post.id}`}>
+                <span class="title">
+                  {post.data.title}
+                  <span class="leader" aria-hidden="true"></span>
+                </span>
+                <time class="date" datetime={post.data.date.toISOString()}>
+                  {formatShortDate(post.data.date)}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    moments.length > 0 && (
+      <section class="shell section">
+        <h2>Moments</h2>
+        <ul class="moment-list">
+          {moments.map((entry) => (
+            <li>
+              <MomentCard entry={entry} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    total === 0 && (
+      <div class="shell">
+        <p class="empty-state">Nothing here yet.</p>
+      </div>
+    )
+  }
+</BaseLayout>

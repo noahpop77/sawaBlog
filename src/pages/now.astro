@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+
+const lastUpdate = "November 16, 2026";
+---
+
+<BaseLayout title={`Now — ${site.name}`} description="What I'm doing now.">
+  <header class="shell page-head">
+    <h1>Now</h1>
+    <p>Here&rsquo;s what keeps me busy at the moment.</p>
+  </header>
+
+  <div class="shell now-content">
+    <p class="now-meta">
+      Last update: <time datetime="2026-11-16">{lastUpdate}</time>
+    </p>
+    <p>
+      This is a <a href="https://nownownow.com/about">now page</a>. Replace this
+      text with a few paragraphs about what you are focused on right now: work,
+      side projects, habits, travel, or anything else that feels current.
+    </p>
+    <p>
+      Unlike the blog, this page is meant to change often. Update the date at the
+      top of <code>src/pages/now.astro</code> whenever you edit it, so readers
+      know how fresh it is.
+    </p>
+
+    <h2>Working on</h2>
+    <ul>
+      <li>List a project or goal you are actively working on.</li>
+      <li>Add another one.</li>
+      <li>Keep this list short and honest.</li>
+    </ul>
+
+    <h2>Reading, watching, listening</h2>
+    <p>
+      Add a book, show, album, or podcast you are into right now. Or delete this
+      section if it does not fit.
+    </p>
+  </div>
+</BaseLayout>
