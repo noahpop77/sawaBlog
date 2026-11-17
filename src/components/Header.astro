@@ -58,23 +58,6 @@ function isActive(href: string): boolean {
                 <path d="M20.9 13.1a9 9 0 1 1-10-10 7 7 0 0 0 10 10Z"></path>
               </svg>
             </button>
-
-            <button
-              class="icon-button"
-              type="button"
-              data-flashlight-toggle
-              aria-label="Turn flashlight off"
-              title="Turn flashlight off"
-            >
-              <svg class="icon-flashlight-on" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M18 6c0 2-2 2-2 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10c0-2-2-2-2-4V2h12z"></path>
-                <path d="M6 6h12M12 12v4"></path>
-              </svg>
-              <svg class="icon-flashlight-off" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M18 6c0 2-2 2-2 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10c0-2-2-2-2-4V2h12z"></path>
-                <path d="M6 6h12M2 2l20 20"></path>
-              </svg>
-            </button>
           </div>
         </li>
       </ul>
@@ -98,7 +81,6 @@ function isActive(href: string): boolean {
 <script>
   const root = document.documentElement;
   const themeToggle = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
-  const flashlightToggle = document.querySelector<HTMLButtonElement>("[data-flashlight-toggle]");
   const menuToggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const navLinks = document.getElementById("site-nav");
 
@@ -117,23 +99,6 @@ function isActive(href: string): boolean {
   });
 
   updateThemeLabel();
-
-  function updateFlashlightLabel() {
-    if (!flashlightToggle) return;
-    const on = !root.classList.contains("no-flashlight");
-    flashlightToggle.setAttribute("aria-label", on ? "Turn flashlight off" : "Turn flashlight on");
-    flashlightToggle.setAttribute("title", on ? "Turn flashlight off" : "Turn flashlight on");
-  }
-
-  flashlightToggle?.addEventListener("click", () => {
-    const enable = root.classList.contains("no-flashlight");
-    root.classList.toggle("flashlight", enable);
-    root.classList.toggle("no-flashlight", !enable);
-    localStorage.setItem("flashlight", enable ? "on" : "off");
-    updateFlashlightLabel();
-  });
-
-  updateFlashlightLabel();
 
   function setMenu(open: boolean) {
     if (!navLinks || !menuToggle) return;

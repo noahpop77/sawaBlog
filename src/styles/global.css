@@ -5,7 +5,6 @@
   --content-column-width: 65ch;
   --block-element-bottom-margin: 2rem;
   --border-radius: 1.5rem;
-  --spotlight-size: 7.5rem;
   --link-transition: color 0.1s ease-out;
 
   /* Light palette */
@@ -469,17 +468,8 @@ img + em {
 }
 
 [data-theme="light"] .icon-moon,
-[data-theme="dark"] .icon-sun,
-.icon-flashlight-off {
+[data-theme="dark"] .icon-sun {
   display: none;
-}
-
-html.no-flashlight .icon-flashlight-on {
-  display: none;
-}
-
-html.no-flashlight .icon-flashlight-off {
-  display: inline;
 }
 
 .menu-toggle {
@@ -1108,30 +1098,6 @@ html.no-flashlight .icon-flashlight-off {
 
 .site-footer p {
   margin: 0;
-}
-
-/* Dark-mode flashlight */
-
-.spotlight {
-  display: none;
-}
-
-@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  html[data-theme="dark"].flashlight .spotlight {
-    position: fixed;
-    top: var(--my, 50%);
-    left: var(--mx, 50%);
-    z-index: 999999;
-    display: block;
-    width: var(--spotlight-size);
-    height: var(--spotlight-size);
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--accent) 50%, transparent);
-    mix-blend-mode: color-burn;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: all 0.1s ease-out;
-  }
 }
 
 /* Responsive details */
